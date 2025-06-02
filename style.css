@@ -124,17 +124,60 @@ h1 {
     color: #e91e63;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+        min-height: 100vh;
+        font-size: 16px;
+    }
+    .container {
+        padding: 8px 2vw;
+    }
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 18px;
+    }
+    .game-container {
+        padding: 8px 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
     .puzzle-grid {
-        width: 250px;
-        height: 250px;
+        width: 90vw;
+        height: 90vw;
+        max-width: 320px;
+        max-height: 320px;
+        gap: 3px;
+    }
+    .puzzle-piece {
+        border-width: 1.5px;
     }
     .music-btn {
         top: 10px;
         right: 10px;
-        font-size: 1.3em;
-        width: 36px;
-        height: 36px;
+        font-size: 1.2em;
+        width: 34px;
+        height: 34px;
+    }
+    .message {
+        font-size: 1em;
+        padding: 12px 4px 4px 4px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.85);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .gift-sticker {
+        width: 60px;
+        height: 60px;
+        margin-top: 10px;
+    }
+    .puzzle-finish, .puzzle-finish.show {
+        width: 90vw;
+        height: 90vw;
+        max-width: 320px;
+        max-height: 320px;
+        border-radius: 10px;
     }
 }
 
