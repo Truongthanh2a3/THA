@@ -4,30 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
-        canvas {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
+        html, body {
             height: 100%;
-            background-color: rgba(0, 0, 0, .2);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         #countdown {
             font-family: 'Dancing Script', cursive;
-            font-size: 3em;
+            font-size: 2.2em;
             color: #e91e63;
             text-shadow: 0 2px 8px #fff;
+            position: fixed;
+            top: 24px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            text-align: center;
+            font-weight: bold;
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+        #mobileHint {
+            position: fixed;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            z-index: 101;
+            text-align: center;
+            font-size: 1.1em;
+            color: #555;
+            background: rgba(255,255,255,0.85);
+            padding: 10px 12px 8px 12px;
+            border-radius: 12px;
+            margin: 0 18vw;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 96vw;
+            height: 96vw;
+            max-width: 420px;
+            max-height: 90vh;
+            background-color: rgba(0, 0, 0, .2);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(233,30,99,0.08);
+        }
+        @media (max-width: 400px) {
+            #mobileHint {
+                font-size: 0.98em;
+                margin: 0 4vw;
+                padding: 8px 4px 6px 4px;
+            }
+            #countdown {
+                font-size: 1.3em;
+                top: 10px;
+            }
+            canvas {
+                width: 98vw;
+                height: 98vw;
+                max-width: 99vw;
+                max-height: 80vh;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="countdown" style="position:fixed;top:30px;left:0;right:0;z-index:100;text-align:center;font-size:2em;font-weight:bold;color:#e91e63;text-shadow:0 2px 8px #fff;pointer-events:none;">15</div>
+    <div id="countdown">Thu Hà</div>
     <canvas id="heart"></canvas>
+    <div id="mobileHint">Nhấn đúp vào màn hình để quay lại nhận quà 🎁</div>
     <audio id="bgMusic" src="../bg-music2.mp3" autoplay loop></audio>
 
     <script>
