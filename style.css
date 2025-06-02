@@ -1,0 +1,155 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+.game-container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    position: relative;
+    display: inline-block;
+}
+
+.puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+.puzzle-piece {
+    width: 100%;
+    height: 100%;
+    background-size: 300% 300%;
+    border: 2px solid #fff;
+    cursor: move;
+    transition: transform 0.2s;
+}
+
+.puzzle-piece:hover {
+    transform: scale(0.95);
+}
+
+.puzzle-piece.dragging {
+    opacity: 0.5;
+    z-index: 1000;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #666;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.message.show {
+    opacity: 1;
+}
+
+.puzzle-finish {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    opacity: 0;
+    pointer-events: none;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    transition: opacity 1s;
+}
+
+.puzzle-finish.show {
+    opacity: 1;
+}
+
+.puzzle-finish.clickable {
+    cursor: pointer;
+    box-shadow: 0 0 0 4px #ffb6c1, 0 0 16px 4px #ffb6c1;
+    animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 4px #ffb6c1, 0 0 16px 4px #ffb6c1; }
+    100% { box-shadow: 0 0 0 8px #ffe4ec, 0 0 32px 8px #ffb6c1; }
+}
+
+.music-btn {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    background: #fff;
+    border: none;
+    font-size: 1.7em;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    z-index: 10;
+}
+
+.music-btn:hover {
+    background: #f0f0f0;
+    color: #e91e63;
+}
+
+@media (max-width: 400px) {
+    .puzzle-grid {
+        width: 250px;
+        height: 250px;
+    }
+    .music-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 1.3em;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.gift-sticker {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    animation: sticker-pop 1s infinite alternate;
+    transition: transform 0.2s;
+}
+.gift-sticker:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+@keyframes sticker-pop {
+    0% { filter: drop-shadow(0 0 0 #ffb6c1); }
+    100% { filter: drop-shadow(0 0 12px #ffb6c1); }
+} 
