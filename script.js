@@ -154,7 +154,7 @@ class PuzzleGame {
             if (audio) {
                 localStorage.setItem('bgMusicTime', audio.currentTime);
             }
-            window.location.href = '/heart/index.html';
+            window.location.href = 'heart/index.html';
         };
     }
 }
