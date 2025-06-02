@@ -18,7 +18,7 @@ class PuzzleGame {
         for (let i = 0; i < 9; i++) {
             const piece = document.createElement('div');
             piece.className = 'puzzle-piece';
-            piece.draggable = true;
+            // piece.draggable = true; // Bỏ drag & drop chuột
             
             // Tính toán vị trí background cho mỗi mảnh
             const row = Math.floor(i / 3);
@@ -29,11 +29,9 @@ class PuzzleGame {
             // Lưu vị trí đúng
             this.correctPositions.push(i);
             
-            // Thêm các event listeners
-            piece.addEventListener('dragstart', this.handleDragStart.bind(this));
-            piece.addEventListener('dragend', this.handleDragEnd.bind(this));
-            piece.addEventListener('dragover', this.handleDragOver.bind(this));
-            piece.addEventListener('drop', this.handleDrop.bind(this));
+            // Thêm event listeners cho cảm ứng (touch)
+            piece.addEventListener('touchstart', this.handleTouchStart.bind(this));
+            piece.addEventListener('touchend', this.handleTouchEnd.bind(this));
             
             this.grid.appendChild(piece);
             this.pieces.push(piece);
@@ -41,6 +39,8 @@ class PuzzleGame {
         
         // Xáo trộn các mảnh
         this.shufflePieces();
+        // Biến lưu mảnh đang chọn
+        this.selectedPiece = null;
     }
 
     shufflePieces() {
@@ -55,41 +55,42 @@ class PuzzleGame {
         this.pieces.forEach(piece => this.grid.appendChild(piece));
     }
 
-    handleDragStart(e) {
-        e.target.classList.add('dragging');
-    }
-
-    handleDragEnd(e) {
-        e.target.classList.remove('dragging');
-    }
-
-    handleDragOver(e) {
+    handleTouchStart(e) {
         e.preventDefault();
+        const piece = e.target.closest('.puzzle-piece');
+        if (!piece) return;
+        // Nếu chưa chọn mảnh nào, chọn mảnh này
+        if (!this.selectedPiece) {
+            this.selectedPiece = piece;
+            piece.classList.add('dragging');
+        } else if (this.selectedPiece === piece) {
+            // Nếu chạm lại chính nó thì bỏ chọn
+            piece.classList.remove('dragging');
+            this.selectedPiece = null;
+        } else {
+            // Nếu đã chọn mảnh trước đó, thực hiện hoán đổi
+            this.swapPieces(this.selectedPiece, piece);
+            this.selectedPiece.classList.remove('dragging');
+            this.selectedPiece = null;
+        }
     }
 
-    handleDrop(e) {
-        e.preventDefault();
-        const draggingPiece = document.querySelector('.dragging');
-        const dropTarget = e.target.closest('.puzzle-piece');
-        
-        if (draggingPiece && dropTarget && draggingPiece !== dropTarget) {
-            // Lấy chỉ số của hai mảnh trong mảng pieces
-            const draggingIndex = this.pieces.indexOf(draggingPiece);
-            const dropIndex = this.pieces.indexOf(dropTarget);
+    handleTouchEnd(e) {
+        // Không cần xử lý gì thêm ở đây
+    }
 
+    swapPieces(pieceA, pieceB) {
+        const indexA = this.pieces.indexOf(pieceA);
+        const indexB = this.pieces.indexOf(pieceB);
+        if (indexA > -1 && indexB > -1 && pieceA !== pieceB) {
+            // Hoán đổi vị trí trong mảng
+            [this.pieces[indexA], this.pieces[indexB]] = [this.pieces[indexB], this.pieces[indexA]];
             // Hoán đổi vị trí trong DOM
-            if (draggingIndex > -1 && dropIndex > -1) {
-                // Hoán đổi vị trí trong mảng
-                [this.pieces[draggingIndex], this.pieces[dropIndex]] = [this.pieces[dropIndex], this.pieces[draggingIndex]];
-
-                // Hoán đổi vị trí trong DOM
-                const draggingNext = draggingPiece.nextSibling;
-                const dropNext = dropTarget.nextSibling;
-                this.grid.insertBefore(draggingPiece, dropNext);
-                this.grid.insertBefore(dropTarget, draggingNext);
-            }
-
-            // Kiểm tra xem đã hoàn thành chưa
+            const nextA = pieceA.nextSibling;
+            const nextB = pieceB.nextSibling;
+            this.grid.insertBefore(pieceA, nextB);
+            this.grid.insertBefore(pieceB, nextA);
+            // Kiểm tra hoàn thành
             this.checkCompletion();
         }
     }
