@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         canvas {
             position: absolute;
@@ -15,12 +16,19 @@
             height: 100%;
             background-color: rgba(0, 0, 0, .2);
         }
+        #countdown {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3em;
+            color: #e91e63;
+            text-shadow: 0 2px 8px #fff;
+        }
     </style>
 </head>
 
 <body>
     <div id="countdown" style="position:fixed;top:30px;left:0;right:0;z-index:100;text-align:center;font-size:2em;font-weight:bold;color:#e91e63;text-shadow:0 2px 8px #fff;pointer-events:none;">15</div>
     <canvas id="heart"></canvas>
+    <audio id="bgMusic" src="../bg-music2.mp3" autoplay loop></audio>
 
     <script>
         window.requestAnimationFrame =
@@ -172,20 +180,13 @@
         if (s === 'complete' || s === 'loaded' || s === 'interactive') init();
         else document.addEventListener('DOMContentLoaded', init, false);
 
-        // Thêm bộ đếm ngược 15s
-        (function() {
-            var countdown = document.getElementById('countdown');
-            var time = 15;
-            countdown.textContent = time;
-            var timer = setInterval(function() {
-                time--;
-                countdown.textContent = time;
-                if (time <= 0) {
-                    clearInterval(timer);
-                    window.history.back();
-                }
-            }, 1000);
-        })();
+        // Bỏ bộ đếm ngược, thay bằng double click để quay lại
+        document.addEventListener('dblclick', function() {
+            window.history.back();
+        });
+
+        // Đổi nội dung #countdown thành 'Thu Hà'
+        document.getElementById('countdown').textContent = 'Sleepy Girl';
     </script>
 </body>
 

@@ -125,8 +125,17 @@ class PuzzleGame {
         finish.classList.add('show');
         finish.classList.remove('clickable');
         finish.onclick = null;
-        this.message.textContent = 'Chúc mừng em đã hoàn thành trò chơi nho nhỏ này, nhấp vào để nhận món quà nho nhỏ luôn nhé';
+        this.message.innerHTML = 'Chúc mừng em đã hoàn thành trò chơi nho nhỏ này nhé!<br><br>' +
+            'Anh làm ra cái mini game này là để thay thế cho những chủ đề thú vị<br>' +
+            'hay những câu chuyện cười trong cuộc nói chuyện của mình.<br><br>' +
+            'Anh dân IT nên anh có thể sẽ hơi nhạt<br>' +
+            'nhưng mà anh sẽ làm cho em thứ anh giỏi nhất :33';
         this.message.classList.add('show');
+        this.message.style.textAlign = 'center';
+        this.message.style.padding = '18px 8px 8px 8px';
+        this.message.style.margin = '0 auto 12px auto';
+        this.message.style.maxWidth = '95vw';
+        this.message.style.wordBreak = 'break-word';
         // Thêm sticker bên dưới lời chúc
         let sticker = document.getElementById('giftSticker');
         if (!sticker) {
@@ -140,6 +149,10 @@ class PuzzleGame {
             this.message.parentNode.appendChild(sticker);
         }
         sticker.onclick = () => {
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                localStorage.setItem('bgMusicTime', audio.currentTime);
+            }
             window.location.href = '/heart/index.html';
         };
     }
@@ -165,5 +178,13 @@ window.addEventListener('load', () => {
         // Đặt icon đúng trạng thái ban đầu
         audio.addEventListener('play', () => btn.textContent = '🎵');
         audio.addEventListener('pause', () => btn.textContent = '🔇');
+    }
+
+    // Phát nhạc từ thời điểm đã lưu (nếu có)
+    const savedTime = localStorage.getItem('bgMusicTime');
+    if (audio && savedTime) {
+        audio.currentTime = parseFloat(savedTime);
+        audio.play();
+        localStorage.removeItem('bgMusicTime');
     }
 }); 
