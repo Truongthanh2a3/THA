@@ -13,7 +13,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #000;
         }
         #countdown {
             font-family: 'Dancing Script', cursive;
@@ -30,22 +30,6 @@
             pointer-events: none;
             letter-spacing: 1px;
         }
-        #mobileHint {
-            position: fixed;
-            bottom: 24px;
-            left: 0;
-            right: 0;
-            z-index: 101;
-            text-align: center;
-            font-size: 1.1em;
-            color: #555;
-            background: rgba(255,255,255,0.85);
-            padding: 10px 12px 8px 12px;
-            border-radius: 12px;
-            margin: 0 18vw;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
-        }
         canvas {
             display: block;
             position: fixed;
@@ -55,7 +39,7 @@
             height: 100vh;
             max-width: none;
             max-height: none;
-            background: none;
+            background: #000;
             border-radius: 0;
             box-shadow: none;
             box-sizing: border-box;
@@ -63,11 +47,6 @@
             z-index: 1;
         }
         @media (max-width: 400px) {
-            #mobileHint {
-                font-size: 0.98em;
-                margin: 0 4vw;
-                padding: 8px 4px 6px 4px;
-            }
             #countdown {
                 font-size: 1.3em;
                 top: 10px;
@@ -83,9 +62,8 @@
 </head>
 
 <body>
-    <div id="countdown">Thu Hà</div>
+    <div id="countdown">Sleepy Girl</div>
     <canvas id="heart"></canvas>
-    <div id="mobileHint">Nhấn đúp vào màn hình để quay lại nhận quà 🎁</div>
     <audio id="bgMusic" src="../bg-music2.mp3" autoplay loop></audio>
 
     <script>
@@ -246,9 +224,6 @@
         document.addEventListener('dblclick', function() {
             window.history.back();
         });
-
-        // Đổi nội dung #countdown thành 'Thu Hà'
-        document.getElementById('countdown').textContent = 'Sleepy Girl';
     </script>
 </body>
 
