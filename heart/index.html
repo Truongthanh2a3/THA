@@ -48,14 +48,15 @@
         }
         @media (max-width: 400px) {
             #countdown {
-                font-size: 1.3em;
-                top: 10px;
+                font-size: 1.8em;
+                top: 5vh;
+                padding: 0 10px;
             }
             canvas {
-                width: 90vw;
-                height: 90vw;
-                max-width: 99vw;
-                max-height: 60vh;
+                width: 100vw;
+                height: 100vh;
+                max-width: 100vw;
+                max-height: 100vh;
             }
         }
     </style>
@@ -106,14 +107,14 @@
             ctx.fillStyle = "rgba(0,0,0,0)";
             ctx.clearRect(0, 0, width, height);
 
-            // Scale và căn giữa trái tim dựa trên tỉ lệ % màn hình
-            var scalePercent = 0.36; // tỉ lệ scale trái tim so với cạnh nhỏ nhất
+            // Điều chỉnh scale và vị trí trái tim
+            var scalePercent = mobile ? 0.45 : 0.36; // Tăng scale cho mobile
             var minDim = Math.min(width, height);
             var scale1 = minDim * scalePercent;
             var scale2 = minDim * scalePercent * 0.7;
             var scale3 = minDim * scalePercent * 0.39;
-            // Căn giữa dọc: offsetY là 50% chiều cao, trừ đi 5% để tránh dính sát top
-            var offsetY = height * 0.5;
+            // Điều chỉnh vị trí dọc cho mobile
+            var offsetY = mobile ? height * 0.55 : height * 0.5;
 
             var heartPosition = function(rad) {
                 return [Math.pow(Math.sin(rad), 3), -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))];
