@@ -5,6 +5,9 @@ class PuzzleGame {
         this.pieces = [];
         this.correctPositions = [];
         this.isComplete = false;
+        this.selectedPiece = null;
+        this.startX = 0;
+        this.startY = 0;
         
         // Đường dẫn ảnh
         this.imageA = 'imageA.jpg'; // Ảnh chính cần ghép
@@ -18,7 +21,6 @@ class PuzzleGame {
         for (let i = 0; i < 9; i++) {
             const piece = document.createElement('div');
             piece.className = 'puzzle-piece';
-            // piece.draggable = true; // Bỏ drag & drop chuột
             
             // Tính toán vị trí background cho mỗi mảnh
             const row = Math.floor(i / 3);
@@ -29,18 +31,22 @@ class PuzzleGame {
             // Lưu vị trí đúng
             this.correctPositions.push(i);
             
-            // Thêm event listeners cho cảm ứng (touch)
-            piece.addEventListener('touchstart', this.handleTouchStart.bind(this));
-            piece.addEventListener('touchend', this.handleTouchEnd.bind(this));
+            // Thêm event listeners cho cả mouse và touch
+            piece.addEventListener('mousedown', this.handleStart.bind(this));
+            piece.addEventListener('touchstart', this.handleStart.bind(this), { passive: false });
             
             this.grid.appendChild(piece);
             this.pieces.push(piece);
         }
         
+        // Thêm event listeners cho document
+        document.addEventListener('mousemove', this.handleMove.bind(this));
+        document.addEventListener('touchmove', this.handleMove.bind(this), { passive: false });
+        document.addEventListener('mouseup', this.handleEnd.bind(this));
+        document.addEventListener('touchend', this.handleEnd.bind(this));
+        
         // Xáo trộn các mảnh
         this.shufflePieces();
-        // Biến lưu mảnh đang chọn
-        this.selectedPiece = null;
     }
 
     shufflePieces() {
@@ -55,10 +61,20 @@ class PuzzleGame {
         this.pieces.forEach(piece => this.grid.appendChild(piece));
     }
 
-    handleTouchStart(e) {
+    handleStart(e) {
         e.preventDefault();
         const piece = e.target.closest('.puzzle-piece');
         if (!piece) return;
+
+        // Lấy tọa độ bắt đầu
+        if (e.type === 'touchstart') {
+            this.startX = e.touches[0].clientX;
+            this.startY = e.touches[0].clientY;
+        } else {
+            this.startX = e.clientX;
+            this.startY = e.clientY;
+        }
+
         // Nếu chưa chọn mảnh nào, chọn mảnh này
         if (!this.selectedPiece) {
             this.selectedPiece = piece;
@@ -75,8 +91,91 @@ class PuzzleGame {
         }
     }
 
-    handleTouchEnd(e) {
-        // Không cần xử lý gì thêm ở đây
+    handleMove(e) {
+        if (!this.selectedPiece) return;
+        e.preventDefault();
+
+        let currentX, currentY;
+        if (e.type === 'touchmove') {
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+        } else {
+            currentX = e.clientX;
+            currentY = e.clientY;
+        }
+
+        const deltaX = currentX - this.startX;
+        const deltaY = currentY - this.startY;
+        
+        // Di chuyển mảnh ghép
+        this.selectedPiece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        
+        // Kiểm tra va chạm với các mảnh khác
+        const pieceRect = this.selectedPiece.getBoundingClientRect();
+        const centerX = pieceRect.left + pieceRect.width / 2;
+        const centerY = pieceRect.top + pieceRect.height / 2;
+
+        this.pieces.forEach(piece => {
+            if (piece !== this.selectedPiece) {
+                const rect = piece.getBoundingClientRect();
+                const pieceCenterX = rect.left + rect.width / 2;
+                const pieceCenterY = rect.top + rect.height / 2;
+
+                const distance = Math.sqrt(
+                    Math.pow(centerX - pieceCenterX, 2) +
+                    Math.pow(centerY - pieceCenterY, 2)
+                );
+
+                if (distance < rect.width / 2) {
+                    piece.classList.add('highlight');
+                } else {
+                    piece.classList.remove('highlight');
+                }
+            }
+        });
+    }
+
+    handleEnd(e) {
+        if (!this.selectedPiece) return;
+        e.preventDefault();
+
+        // Tìm mảnh ghép gần nhất để hoán đổi
+        const pieceRect = this.selectedPiece.getBoundingClientRect();
+        const centerX = pieceRect.left + pieceRect.width / 2;
+        const centerY = pieceRect.top + pieceRect.height / 2;
+
+        let closestPiece = null;
+        let minDistance = Infinity;
+
+        this.pieces.forEach(piece => {
+            if (piece !== this.selectedPiece) {
+                const rect = piece.getBoundingClientRect();
+                const pieceCenterX = rect.left + rect.width / 2;
+                const pieceCenterY = rect.top + rect.height / 2;
+
+                const distance = Math.sqrt(
+                    Math.pow(centerX - pieceCenterX, 2) +
+                    Math.pow(centerY - pieceCenterY, 2)
+                );
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPiece = piece;
+                }
+            }
+        });
+
+        // Reset trạng thái
+        this.selectedPiece.classList.remove('dragging');
+        this.selectedPiece.style.transform = '';
+        this.pieces.forEach(piece => piece.classList.remove('highlight'));
+
+        // Nếu tìm thấy mảnh gần nhất và khoảng cách đủ gần, thực hiện hoán đổi
+        if (closestPiece && minDistance < pieceRect.width / 2) {
+            this.swapPieces(this.selectedPiece, closestPiece);
+        }
+
+        this.selectedPiece = null;
     }
 
     swapPieces(pieceA, pieceB) {
@@ -187,5 +286,16 @@ window.addEventListener('load', () => {
         audio.currentTime = parseFloat(savedTime);
         audio.play();
         localStorage.removeItem('bgMusicTime');
+    }
+
+    // Thêm phát hiện thiết bị di động
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const deviceNotice = document.getElementById('deviceNotice');
+
+    if (isMobile) {
+        deviceNotice.textContent = 'Vuốt hoặc kéo để di chuyển các mảnh ghép';
+        setTimeout(() => {
+            deviceNotice.style.display = 'none';
+        }, 5000);
     }
 }); 

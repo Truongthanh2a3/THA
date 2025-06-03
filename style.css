@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -11,17 +12,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    touch-action: manipulation;
 }
 
 .container {
     text-align: center;
     padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 h1 {
     color: #333;
     margin-bottom: 30px;
-    font-size: 2.5em;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
 }
 
 .game-container {
@@ -31,14 +36,15 @@ h1 {
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     position: relative;
     display: inline-block;
+    max-width: 100%;
 }
 
 .puzzle-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
-    width: 300px;
-    height: 300px;
+    width: min(90vw, 300px);
+    height: min(90vw, 300px);
     margin: 0 auto;
 }
 
@@ -49,6 +55,9 @@ h1 {
     border: 2px solid #fff;
     cursor: move;
     transition: transform 0.2s;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .puzzle-piece:hover {
@@ -62,10 +71,13 @@ h1 {
 
 .message {
     margin-top: 20px;
-    font-size: 1.2em;
+    font-size: clamp(1rem, 4vw, 1.2rem);
     color: #666;
     opacity: 0;
     transition: opacity 0.5s;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.9);
 }
 
 .message.show {
@@ -75,8 +87,8 @@ h1 {
 .puzzle-finish {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    width: 300px;
-    height: 300px;
+    width: min(90vw, 300px);
+    height: min(90vw, 300px);
     margin: 0 auto;
     opacity: 0;
     pointer-events: none;
@@ -95,23 +107,24 @@ h1 {
     box-shadow: 0 0 0 4px #ffb6c1, 0 0 16px 4px #ffb6c1;
     animation: pulse 1s infinite alternate;
 }
+
 @keyframes pulse {
     0% { box-shadow: 0 0 0 4px #ffb6c1, 0 0 16px 4px #ffb6c1; }
     100% { box-shadow: 0 0 0 8px #ffe4ec, 0 0 32px 8px #ffb6c1; }
 }
 
 .music-btn {
-    position: absolute;
-    top: 25px;
-    right: 35px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
     background: #fff;
     border: none;
-    font-size: 1.7em;
+    font-size: clamp(1.2rem, 4vw, 1.7rem);
     cursor: pointer;
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    width: 44px;
-    height: 44px;
+    width: clamp(34px, 10vw, 44px);
+    height: clamp(34px, 10vw, 44px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,74 +137,52 @@ h1 {
     color: #e91e63;
 }
 
+.device-notice {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    z-index: 1000;
+}
+
 @media (max-width: 600px) {
-    body {
-        padding: 0;
-        min-height: 100vh;
-        font-size: 16px;
+    .device-notice {
+        display: block;
     }
+    
     .container {
-        padding: 8px 2vw;
+        padding: 10px;
     }
-    h1 {
-        font-size: 1.5em;
-        margin-bottom: 18px;
-    }
+    
     .game-container {
-        padding: 8px 0;
+        padding: 10px;
         border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
-    .puzzle-grid {
-        width: 90vw;
-        height: 90vw;
-        max-width: 320px;
-        max-height: 320px;
-        gap: 3px;
-    }
+    
     .puzzle-piece {
         border-width: 1.5px;
-    }
-    .music-btn {
-        top: 10px;
-        right: 10px;
-        font-size: 1.2em;
-        width: 34px;
-        height: 34px;
-    }
-    .message {
-        font-size: 1em;
-        padding: 12px 4px 4px 4px;
-        margin-top: 10px;
-        border-radius: 8px;
-        background: rgba(255,255,255,0.85);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .gift-sticker {
-        width: 60px;
-        height: 60px;
-        margin-top: 10px;
-    }
-    .puzzle-finish, .puzzle-finish.show {
-        width: 90vw;
-        height: 90vw;
-        max-width: 320px;
-        max-height: 320px;
-        border-radius: 10px;
     }
 }
 
 .gift-sticker {
     display: block;
-    width: 80px;
-    height: 80px;
+    width: clamp(60px, 15vw, 80px);
+    height: clamp(60px, 15vw, 80px);
     margin: 0 auto;
     animation: sticker-pop 1s infinite alternate;
     transition: transform 0.2s;
 }
+
 .gift-sticker:hover {
     transform: scale(1.1) rotate(-5deg);
 }
+
 @keyframes sticker-pop {
     0% { filter: drop-shadow(0 0 0 #ffb6c1); }
     100% { filter: drop-shadow(0 0 12px #ffb6c1); }
